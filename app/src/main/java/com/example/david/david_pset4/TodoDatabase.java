@@ -6,48 +6,55 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by dedvg on 20-11-2017.
- */
-
 public class TodoDatabase extends SQLiteOpenHelper {
-    private static final String TAG ="TodoDatabase";
+
     private static TodoDatabase instance = null;
+
+    private static final String TAG ="TodoDatabase";
     private static final String TABLE_NAME ="todos";
     private static final String COL1 ="_id";
     private static final String COL2 ="title";
     private static final String COL3 ="completed";
 
-
     private TodoDatabase(Context context) {
         super(context, TABLE_NAME, null, 1);
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String create_table = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT," + COL2 + " TEXT," + COL3 + " BIT);";
+        String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " BIT);";
+        db.execSQL(createTable);
 
-        db.execSQL(create_table);
     }
-    public boolean add_data(String Item){
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
+
+    }
+
+    public boolean insert(String Item) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL2, Item);
+        contentValues.put(COL3, 0);
 
-        System.out.println( TAG +  " adding " + Item + " to " + TABLE_NAME);
+        long result = db.insert(TABLE_NAME, null, contentValues);
 
-        long Result = db.insert(TABLE_NAME, null, contentValues);
-        // Result is -1 if inserted incorrect
-        if (Result == -1){
+        if (result == -1) {
             System.out.println("hieeeerr");
             return false;
         }
         else {
-            System.out.println("daaar");
-
+            System.out.println("daar");
             return true;
         }
+
+
     }
+
     public static TodoDatabase getInstance(Context context) {
         if (instance == null) {
             instance = new TodoDatabase(context);
@@ -55,16 +62,11 @@ public class TodoDatabase extends SQLiteOpenHelper {
         return instance;
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
-    }
-    public Cursor getData(){
+    public Cursor getData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor data = db.rawQuery(query, null);
-        return data;
+        String all = "SELECT * FROM " + TABLE_NAME;
+        Cursor entries = db.rawQuery(all, null);
+        return entries;
     }
     public Cursor get_id (String selected){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -75,11 +77,10 @@ public class TodoDatabase extends SQLiteOpenHelper {
         Cursor data = db.rawQuery(query, null);
         return data;
     }
-    public void deleteItem(int id, String name){
+    public void deleteItem(long id){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + COL1 + " = '" +  id + "' AND " + COL2 + " = '" + name + "'; ";
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + COL1 + " = '" +  id + "';";
         System.out.println(query);
         db.execSQL(query);
     }
-
 }

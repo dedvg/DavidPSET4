@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         leftbtn = findViewById(R.id.leftbutton);
         rightbtn = findViewById(R.id.rightbutton);
         rightbtn.setVisibility(View.INVISIBLE);
-        mTodoDatabase = TodoDatabase.getInstance(this);
         listView = findViewById(R.id.listView);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -67,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        mTodoDatabase = TodoDatabase.getInstance(this);
+        populate_listview();
         mTodoDatabase = TodoDatabase.getInstance(getApplicationContext());
     }
 

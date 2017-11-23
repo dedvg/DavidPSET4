@@ -12,14 +12,12 @@ public class TodoAdapter extends ResourceCursorAdapter {
     public TodoAdapter(Context context, Cursor cursor) {
 
         super(context, R.layout.row_todo, cursor, 0);
-        System.out.println("askjdalsd");
 
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        System.out.println("heloooooooo");
         TextView entryText = view.findViewById(R.id.entryText);
         CheckBox completed = view.findViewById(R.id.checkBox);
         Integer title_id = cursor.getColumnIndex("title");

@@ -31,13 +31,12 @@ public class MainActivity extends AppCompatActivity {
         editText = findViewById(R.id.editText);
         editText.setHint("todo item");
         leftbtn = findViewById(R.id.leftbutton);
-        rightbtn = findViewById(R.id.rightbutton);
-        rightbtn.setVisibility(View.INVISIBLE);
         listView = findViewById(R.id.listView);
         mTodoDatabase = TodoDatabase.getInstance(this);
         mTodoDatabase = TodoDatabase.getInstance(getApplicationContext());
 
         listView.setOnItemLongClickListener(new ClickListener());
+        listView.setOnItemClickListener(new Click());
         update_data();
 
     }
@@ -49,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     if ( inserted == true){
         toast_message("succesfull insert");
+        editText.setText("");
         update_data();
 
 
@@ -67,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(data.getString(1));
         }
         //     ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
-        System.out.println("HOE DAN?");
         adapter = new TodoAdapter(this, data);
-        System.out.println("HOE DAN2?");
 
         listView.setAdapter(adapter);
 
@@ -99,11 +97,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-            selected = parent.getItemAtPosition(position).toString();
             selected_id = id;
             mTodoDatabase.deleteItem(selected_id);
             update_data();
-            toast_message("deleted " + selected);
             return true;
         }
 
@@ -112,5 +108,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private class Click implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            mTodoDatabase.check(id);
+            update_data();
+
+        }
+    }
 }

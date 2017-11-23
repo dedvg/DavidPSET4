@@ -11,6 +11,8 @@ An item can be checked by just clicking the item.
 The values are stored if the user quits the app or changes from portrait to landscape.
 
 
+[![BCH compliance](https://bettercodehub.com/edge/badge/dedvg/DavidPSET4?branch=master)](https://bettercodehub.com/)
+
 ![image1](doc/image%20(1).png)
 ![image2](doc/image%20(2).png)
 ![image3](doc/image%20(3).png)
